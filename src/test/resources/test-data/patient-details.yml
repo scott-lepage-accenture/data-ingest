@@ -1,0 +1,54 @@
+---
+ID: 0111111
+patient:
+# John Smith
+religion: Catholic
+financial_class:
+    code: 12
+    description: Middle Class
+email_address: johnsmith@gmail.com
+local_address: "1301 S. Braeswood Blvd., Houston, TX"
+allergies:
+    - Mold
+    - Peanuts
+nutrition:
+    Low Sodium
+preferences:
+    cuisine:
+        - American
+        - Chinese
+        - Tex Mex
+        - BBQ
+    activities:
+        - Walking
+        - Bicycling
+    events:
+        - Music
+        - Football
+    music:
+        - Classic Rock
+transportation: Personal Car
+diagnostics:
+    date: 2015/01/06
+    bmi: 21
+medications:
+    start: 2014/10/10
+    notes: "Completed full treatment 2014/10/14"
+    name: Aldesleukin
+    in_patient: true
+companion:
+    first_name: Beverly
+    last_name: Smith
+    gender: F
+    relationship: Spouse
+    preferences:
+        cuisine:
+            - Chinese
+            - Seafood
+        events:
+            - Exhibitions
+            - Collegiate Athletics
+        music:
+            - Easy Listening
+            - Swing
+            - Big Band

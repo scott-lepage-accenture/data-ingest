@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+           xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+    <cm:property-placeholder id="example" persistent-id="example.id">
+        <cm:default-properties>
+            <cm:property name="neo4j.server.root.uri"
+                         value="http://localhost:7474/db/data/"/>
+        </cm:default-properties>
+    </cm:property-placeholder>
+
+    <!-- Basic Bean Definitions-->
+    <bean id="yamlProcessor" class="com.coginitive.interview.processor.YAMLProcessor"/>
+    <bean id="neo4jRESTClientProcessor" class="com.coginitive.interview.processor.Neo4JRESTClientProcessor">
+        <property name="serverURI" value="${neo4j.server.root.uri}"/>
+    </bean>
+
+    <!-- Osgi Service Related -->
+
+    <camelContext trace="false" xmlns="http://camel.apache.org/schema/blueprint" useMDCLogging="true">
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled>
+                <constant>true</constant>
+            </handled>
+            <to uri="mock:exception"/>
+        </onException>
+        <route id="data-ingest-route">
+            <from uri="file:src/test/resources/test-data?consumer.delay=10000&amp;noop=true"/>
+            <choice>
+                <when>
+                    <simple>${file:ext} == 'csv'</simple>
+                    <unmarshal>
+                        <csv skipFirstLine="true"/>
+                    </unmarshal>
+                    <log message="csv -- ${body}"/>
+                    <to id="fake-endpoint" uri="mock:result"/>
+                </when>
+                <when>
+                    <simple>${file:ext} == 'yml'</simple>
+                    <convertBodyTo type="java.lang.String"/>
+                    <process ref="yamlProcessor"/>
+                    <log message="${body}"/>
+                    <to id="fake-endpoint" uri="mock:result"/>
+                </when>
+                <otherwise>
+                    <log message="other-- ${body}"/>
+                    <to id="fake-endpoint" uri="mock:exception"/>
+                </otherwise>
+            </choice>
+            <process ref="neo4jRESTClientProcessor"/>
+        </route>
+    </camelContext>
+
+</blueprint>
