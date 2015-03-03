@@ -25,6 +25,7 @@
             <handled>
                 <constant>true</constant>
             </handled>
+            <to uri="log:com.cognitive.exception?showAll=true"/>
             <to uri="mock:exception"/>
         </onException>
         <route id="data-ingest-route">
@@ -36,14 +37,12 @@
                         <csv skipFirstLine="true"/>
                     </unmarshal>
                     <log message="csv -- ${body}"/>
-                    <to id="fake-endpoint" uri="mock:result"/>
                 </when>
                 <when>
                     <simple>${file:ext} == 'yml'</simple>
                     <convertBodyTo type="java.lang.String"/>
                     <process ref="yamlProcessor"/>
                     <log message="${body}"/>
-                    <to id="fake-endpoint" uri="mock:result"/>
                 </when>
                 <otherwise>
                     <log message="other-- ${body}"/>
@@ -51,6 +50,8 @@
                 </otherwise>
             </choice>
             <process ref="neo4jRESTClientProcessor"/>
+            <log message="${body}"/>
+            <to id="fake-endpoint" uri="mock:result"/>
         </route>
     </camelContext>
 
