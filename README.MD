@@ -12,4 +12,4 @@ mvn clean install
 
 ## Feature requests
 This solution, while robust, will require further enhancements to meet scalability requirements. Additional fleshing out of the required Use Case / Queries / Relationships will help further the development of the graph model. An attempt at data model including these elements based entirely on an educated guess is located here:
- [Gist Data Model]
+ [Gist Data Model](http://gist.neo4j.org/?github-scott-lepage-accenture%2Fgists%2F%2Fother%2FPatientInformation.adoc).
